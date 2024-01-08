@@ -1,6 +1,5 @@
 package guru.qa.niffler.test;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.GenerateCategory;
 import guru.qa.niffler.jupiter.GenerateSpend;
@@ -10,7 +9,7 @@ import guru.qa.niffler.pages.LoginPage;
 import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.CollectionCondition.size;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SpendingTest extends BaseWebTest {
 
@@ -30,12 +29,13 @@ public class SpendingTest extends BaseWebTest {
   @Test
   void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
     Selenide.open("http://127.0.0.1:3000/main");
+
     loginPage.logInUnder("duck", "12345");
 
-    ElementsCollection records = mainPage.selectTableRecordByText(spend.description())
-            .clickDeleteButton()
-            .getAllRecords();
+    mainPage.selectTableRecordByText(spend.description())
+            .clickDeleteButton();
 
-    records.shouldHave(size(0));
+    assertTrue(mainPage.tableShouldHaveSize(0),
+            "Spendings table should contain 1 records");
   }
 }
